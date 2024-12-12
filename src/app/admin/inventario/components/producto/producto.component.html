@@ -1,0 +1,69 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+                    </div>
+                </ng-template>
+                
+                <ng-template pTemplate="right">
+                    <button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-help" (click)="dt.exportCSV()"></button>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt [value]="products" [columns]="cols" responsiveLayout="scroll" [rows]="10" [paginator]="true" 
+                     [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" 
+                     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos" 
+                     [rowHover]="true" dataKey="id">
+                
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Administrar Productos</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" placeholder="Buscar..." class="w-full sm:w-auto" />
+                        </span>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="id">Id <p-sortIcon field="id"></p-sortIcon></th>
+                        <th pSortableColumn="name">Nombre <p-sortIcon field="name"></p-sortIcon></th>
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQF5lNW7gvhiy0coDuKRhmqonP4Eg9UCqMMogXYT5naGFYufH49bSqlVCzLkPS2iOiCoEs&usqp=CAU" alt="" class="mb-5 w-6rem flex-shrink-0">
+                        <th pSortableColumn="precio">Precio <p-sortIcon field="precio"></p-sortIcon></th>
+                        <th pSortableColumn="categoria">Categoría <p-sortIcon field="categoria"></p-sortIcon></th>
+                        <th pSortableColumn="estado">Estado <p-sortIcon field="estado"></p-sortIcon></th>
+                        <th>Acciones</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-product>
+                    <tr>
+                        <td>{{ product.id }}</td>
+                        <td>{{ product.nombre }}</td>
+                        <td>
+                            <img [src]="product.image" [alt]="product.nombre" width="100" class="shadow-4" />
+                        </td>
+                        <td>{{ product.precio | currency: 'USD' }}</td>
+                        <td>{{ product.categoria_id }}</td>
+                        <td>
+                            <span [class]="'product-badge status-' + (product.estado ? product.estado.toLowerCase() : '')">
+                                {{ product.estado }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editProduct(product)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(product)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

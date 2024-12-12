@@ -1,0 +1,57 @@
+<div class="card">
+    <h1>Categoria</h1>
+
+    <p-button (click)="mostrarDialogo()" label="Nueva Categoría" />
+    <p-dialog header="Categoría" [(visible)]="dialog_visible" [modal]="true"
+        [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '30vw' }" [draggable]="false"
+        [resizable]="false" class="p-fluid">
+        <form [formGroup]="categoriaForm">
+            <div class="field">
+                <label for="name">Nombre</label>
+                <input type="text" pInputText id="name" required autofocus formControlName="nombre" />
+                <small class="ng-dirty ng-invalid">Nombre requerido.</small>
+            </div>
+
+            <div class="field">
+                <label for="det">Detalle</label>
+                <input type="text" pInputText id="det" required formControlName="detalle" />
+
+            </div>
+        </form>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
+                (click)="dialog_visible=false"></button>
+            <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
+                (click)="guardarCategoria()"></button>
+        </ng-template>
+
+    </p-dialog>
+
+    <p-table [value]="categorias" stripedRows [tableStyle]="{'min-width': '30rem'}">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Detalle</th>
+
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-categoria>
+            <tr>
+                <td>{{categoria.id}}</td>
+                <td>{{categoria.nombre}}</td>
+                <td>{{categoria.detalle}}</td>
+
+                <td>
+
+                    <div class="flex">
+                        <p-button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"(click)="editarCategoria(categoria)"></p-button>
+                        <p-button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="eliminarCategoria(categoria)"></p-button>
+                    </div>
+
+                </td>
+
+        </ng-template>
+    </p-table>
+
+</div>
