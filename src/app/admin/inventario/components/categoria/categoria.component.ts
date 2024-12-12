@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CategoriaService } from '../../services/categoria.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import swal from 'sweetalert2'
 import Swal from 'sweetalert2';
 
@@ -22,59 +22,65 @@ export class CategoriaComponent {
   dialog_visible: boolean=false
   categoria_id:number=-1;
   
-  categoriaForm=new FormGroup({
-    nombre:new FormControl(''),
-    detalle: new FormControl('')
-  })
+  categoriaForm = new FormGroup({
+    nombre: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    detalle: new FormControl('', [Validators.required, Validators.minLength(5)])
+  });
   ngOnInit():void{
     this.getCategorias()
   }
-  getCategorias(){
+  getCategorias() {
     this.categoriaService.funListar().subscribe(
-      (res:any)=>{
-        this.categorias=res;
+      (res: any) => {
+        console.log('Datos obtenidos:', res); // Verifica los datos en consola
+        this.categorias = res;
       },
-      (error:any)=>{
-        console.log(error)
+      (error: any) => {
+        console.error('Error al obtener categorías:', error);
       }
-    )
+    );
   }
+  
   mostrarDialogo(){
     this.dialog_visible=true
   }
 
-  guardarCategoria(){
-    if(this.categoria_id>0){     
-    this.categoriaService.funModificar(this.categoria_id,this.categoriaForm.value).subscribe(
-      (res:any)=>{
-        this.dialog_visible=false;
-        this.getCategorias();
-        this.categoria_id=-1;
-        this.alerta("ACTUALIZADO", "La categoria se modifico con exito!", "success")
-
-      },
-      (error:any)=>{
-        this.alerta("ERROR AL ACTUALIZAR", "Verifica los datos!", "error")
-      }
-    );
+  guardarCategoria() {
+  if (this.categoriaForm.valid) {
+    if (this.categoria_id > 0) {
+      // Modificar categoría existente
+      this.categoriaService.funModificar(this.categoria_id, this.categoriaForm.value).subscribe(
+        (res: any) => {
+          this.dialog_visible = false;
+          this.getCategorias();
+          this.categoria_id = -1;
+          this.alerta("ACTUALIZADO", "La categoría se modificó con éxito!", "success");
+        },
+        (error: any) => {
+          console.error('Error al actualizar categoría:', error);
+          this.alerta("ERROR AL ACTUALIZAR", "Verifica los datos!", "error");
+        }
+      );
+    } else {
+      // Crear nueva categoría
+      this.categoriaService.funGuardar(this.categoriaForm.value).subscribe(
+        (res: any) => {
+          this.dialog_visible = false;
+          this.getCategorias();
+          this.alerta("REGISTRADO", "La categoría se creó con éxito!", "success");
+        },
+        (error: any) => {
+          console.error('Error al guardar categoría:', error);
+          this.alerta("ERROR AL REGISTRAR", "Verifica los datos!", "error");
+        }
+      );
+    }
     this.categoriaForm.reset();
+  } else {
+    this.alerta("FORMULARIO INVÁLIDO", "Por favor completa todos los campos.", "error");
   }
-  else{
-    this.categoriaService.funGuardar(this.categoriaForm.value).subscribe(
-      (res:any)=>{
-        this.dialog_visible=false;
-        this.getCategorias();
-        this.alerta("Registrado","La categoria se creo con exito!","success")
-      },
-      (error:any)=>{
-        this.alerta("ERROR AL REGISTRADO", "Verifica los datos!", "error");
-      }
-
-
-    )
-  }
-this.categoriaForm.reset();
 }
+
   editarCategoria(cat:Categoria){
     this.dialog_visible=true
     this.categoria_id=cat.id
