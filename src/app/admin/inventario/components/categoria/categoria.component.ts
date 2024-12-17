@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CategoriaService } from '../../services/categoria.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import swal from 'sweetalert2'
 import Swal from 'sweetalert2';
 
 interface Categoria{
@@ -100,14 +99,14 @@ export class CategoriaComponent {
           this.categoriaService.funEliminar(cat.id).subscribe(
               (res:any)=>{
                   
-                  this.alerta("ELIMINANDO!","Categoria eliminada","success")
-                  
-                  this.getCategorias();
-                  this.categoria_id=-1
+               this.alerta("ELIMINANDO!","Categoria eliminada","success")
+                
+               this.getCategorias();
+               this.categoria_id=-1
               },
               (error:any)=>{
                   
-                      this.alerta("ERROR!", "Error al intentar eliminar", "error")
+               this.alerta("ERROR!", "Error al intentar eliminar", "error")
                   
               }
             )
@@ -118,9 +117,9 @@ export class CategoriaComponent {
       
       alerta(title:string, text:string, icon:'success'|'error'|'info'|'question'){
         Swal.fire({
-          title: title,
-          text:text,
-          icon:icon
+         // title: title,
+          //text:text,
+          //icon:icon
         });
       }
     }
